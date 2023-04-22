@@ -5,7 +5,7 @@ from rasa_nlu import config
 import warnings
 
 warnings.filterwarnings('ignore')
-print("Loading NLU model...")
+print("Athena is waking up...")
 training_data = load_data("nlu_data.md")
 trainer = Trainer(config.load("nlu_config.yml"))
 interpreter = trainer.train(training_data)

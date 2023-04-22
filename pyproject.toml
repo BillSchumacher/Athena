@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "athena-ai"
-version = "0.0.9"
+version = "0.0.10"
 authors = [
   { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
   { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
@@ -17,12 +17,27 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["build", "setuptools", "twine", "wheel", "openai",
+dependencies = ["build", "setuptools", "twine", "wheel", "openai", "loguru", "click",
  "python-dotenv", "rasa_nlu", "scikit-learn", "spacy", "Flask", "flask-cors"]
 
 [project.scripts]
 athena = "athena.__main__:main"
-
+[tool.hatch.build]
+exclude = [
+  "*.txt",
+  "athena-app/*",
+  ".env",
+  ".env*",
+  "*.env",
+  "*venv*",
+  "tests/*",
+  "docs/*",
+  "examples/*",
+  "scripts/*",
+  "data/*",
+  "node_modules/*",
+  "**/node_modules/*",
+]
 [tool.hatch.metadata]
 allow-direct-references = true
 

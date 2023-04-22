@@ -1,7 +1,18 @@
 from athena.input_processor import process_input
+from athena.loguru_config import setup_logging
+import os
+import click
 
 
-def main():
+@click.command()
+@click.option(
+    "--log-level",
+    type=str,
+    default=os.getenv("LOG_LEVEL", "INFO"),
+    help="Set logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
+)
+def main(log_level):
+    setup_logging(log_level)
     print("Welcome to Athena!")
     username = input("Please enter your name: ")
 

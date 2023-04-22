@@ -3,3 +3,5 @@ python-dotenv
 rasa_nlu[spacy]
 Flask
 flask-cors
+loguru
+click
