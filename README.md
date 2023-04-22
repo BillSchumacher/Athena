@@ -106,6 +106,14 @@ python -m athena
 
 3. Interact with Athena using the command prompt.
 
+## 🌟 Community 🌟
+
+🚀 We encourage users and developers to join our *exciting* and *growing* community on Discord! This is a 🌐 space where you can ask questions, 💡 share ideas, 🤝 collaborate on Athena's development, and stay updated on the latest news 📰 and announcements 📢. 
+
+🔗 Click the link below to *dive in* and join our Discord server:
+
+[🎉 Join the Athena Discord Community 🎉](https://discord.gg/AQW79PShYF)
+
 ## 📚 Documentation
 
 Check out our [Wiki](https://github.com/BillSchumacher/Athena/wiki) for detailed documentation on how to use Athena, extend its capabilities, and customize it to your needs.
