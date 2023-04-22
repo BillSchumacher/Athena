@@ -4,20 +4,30 @@ build-backend = "hatchling.build"
 
 [project]
 name = "athena-ai"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
   { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
 ]
 description = "Athena, an AI agent built on GPT-4 architecture, is designed for continuous learning and self-reliance. Inspired by the Greek goddess of wisdom, Athena assists users with valuable insights across various subjects. Focused on knowledge acquisition, capability improvement, and security, this AI agent leverages natural language processing and a supportive human community to grow and become a trusted, versatile companion."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["build", "setuptools", "twine", "wheel", "openai", "python-dotenv", "rasa_nlu[spacy]"]
+dependencies = ["build", "setuptools", "twine", "wheel", "openai",
+ "python-dotenv", "rasa_nlu", "scikit-learn", "spacy"]
+
+[project.scripts]
+athena = "main:main"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel.force-include]
+"bin/athena.py" = "main.py"
 
 [project.urls]
 "Homepage" = "https://github.com/BillSchumacher/Athena"
@@ -25,7 +35,7 @@ dependencies = ["build", "setuptools", "twine", "wheel", "openai", "python-doten
 
 [tool.black]
 line-length = 88
-target-version = ['py38']
+target-version = ['py37']
 include = '\.pyi?$'
 extend-exclude = ""
 

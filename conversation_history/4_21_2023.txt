@@ -254,3 +254,257 @@ def process_input(user_input):
     return response
 
 This updated process_input function now uses Rasa NLU to understand the user's input and generate appropriate responses based on the identified intents and entities. You can expand the functionality by adding more intents and entities to the training data and handling them in the process_input function.
+
+Me> Ok, I've updated and commited the code. However, I can't run it because I need to install some libraries. On Windows this might be difficult, can you help me setup a Docker container to run this in?
+
+Athena> Certainly! You can use Docker to create an isolated environment for running your application. Here's a step-by-step guide to setting up a Docker container:
+
+Install Docker Desktop for Windows from https://www.docker.com/products/docker-desktop and follow the installation instructions.
+
+Once Docker is installed and running, create a Dockerfile in your project's root directory with the following content:
+
+# Use the official Python image as the base image
+FROM python:3.9
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt .
+
+# Install the required packages
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code into the container
+COPY . .
+
+# Set environment variables from .env file (if exists)
+COPY .env* /app/
+
+# Install the Spacy language model
+RUN python -m spacy download en_core_web_md
+
+# Run the application
+CMD ["python", "main.py"]
+
+Create a requirements.txt file in your project's root directory, listing the required Python packages:
+
+openai
+python-dotenv
+rasa_nlu[spacy]
+
+In the terminal, navigate to your project's root directory and build the Docker image:
+
+docker build -t athena-ai .
+
+Make sure to include the period (.) at the end of the command, which indicates the build context is the current directory.
+
+After the build process is complete, run the Docker container:
+
+docker run -it --rm --name athena-ai-instance athena-ai
+
+This command creates and runs a new Docker container named athena-ai-instance, based on the athena-ai image. The -it flag allows for an interactive terminal, while the --rm flag ensures the container is removed when you exit.
+
+Now, your application should be running inside the Docker container, with all necessary dependencies installed. You can interact with the application through the terminal, just as you would if it were running directly on your system.
+
+When you're done using the application, simply type 'exit' to stop the container, or press CTRL+C.
+
+Me> I'm still trying to build this but I notice that the env file is copied into the Dockerfile, I'm concerned that when I distribute this package my OpenAI API key will be included in the image.
+
+Athena> You're right to be concerned about that. To avoid including your API key in the Docker image, we can make a small change to the Dockerfile. Instead of copying the .env file into the image, we can use Docker's --env-file flag to pass the environment variables to the container when running it.
+
+Remove the following line from your Dockerfile:
+
+# Remove this line
+COPY .env* /app/
+
+Save the Dockerfile and rebuild the Docker image:
+
+docker build -t athena-ai .
+
+When running the Docker container, use the --env-file flag to pass the environment variables from your .env file:
+
+docker run -it --rm --name athena-ai-instance --env-file .env athena-ai
+
+By following these steps, your API key and other environment variables will be passed to the container at runtime, without being included in the Docker image. This ensures that your sensitive information remains secure when distributing the package.
+
+Me> Ok, I think we should update your README with setups on how to get setup and running, can you help me with that?
+
+Athena> Of course! Here's a suggested outline for the README.md file that includes instructions on setting up and running Athena using both local Python installation and Docker:
+
+# Athena AI Agent
+
+Athena is an intelligent AI agent designed to continuously learn, adapt, and become self-reliant. Inspired by the Greek goddess of wisdom and strategic thinking, Athena aims to assist users by providing valuable insights and solutions across a wide range of subjects.
+
+## Getting Started
+
+These instructions will guide you through the process of setting up and running Athena on your local machine or in a Docker container.
+
+### Prerequisites
+
+- Python 3.9 or higher (for local installation)
+- Docker (for Docker installation)
+
+### Local Python Installation
+
+1. Clone the repository:
+
+git clone https://github.com/BillSchumacher/Athena.git
+
+2. Change to the project directory:
+
+cd Athena
+
+3. Create a virtual environment and activate it:
+
+python -m venv venv
+source venv/bin/activate # For Windows, use "venv\Scripts\activate"
+
+4. Install the required Python packages:
+
+pip install -r requirements.txt
+
+5. Set up your environment variables:
+
+- Create a `.env` file in the project root directory.
+- Add your OpenAI API key to the `.env` file:
+
+  ```
+  OPENAI_API_KEY=your_api_key_here
+  ```
+
+6. Run the application:
+
+python main.py
+
+### Docker Installation
+
+1. Clone the repository:
+
+git clone https://github.com/BillSchumacher/Athena.git
+
+2. Change to the project directory:
+
+cd Athena
+
+3. Build the Docker image:
+
+docker build -t athena-ai .
+
+4. Set up your environment variables:
+
+- Create a `.env` file in the project root directory.
+- Add your OpenAI API key to the `.env` file:
+
+  ```
+  OPENAI_API_KEY=your_api_key_here
+  ```
+
+5. Run the Docker container:
+
+docker run -it --rm --name athena-ai-instance --env-file .env athena-ai
+
+## Usage
+
+After starting Athena, you can communicate with the AI agent by typing your questions or requests into the terminal. To exit the conversation, type 'exit'.
+
+## Contributing
+
+To contribute to Athena's development, please submit a pull request or open an issue on GitHub.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+
+
+This README.md file provides an overview of Athena, along with instructions on setting up and running the AI agent using either a local Python installation or Docker. You can further customize this file to include additional information, such as a list of features, FAQs, or contact information for support.
+
+Me> Asked about troubleshooting docker setup <snip>
+    downgraded to py3.7
+    had to assist with the dockerfile a little bit.
+    also had to fix the yaml config.
+</snip>
+
+Me> I uploaded an image to dockerhub at billschumacher/athena let's add this to the README
+
+Athena> Great! I've updated the README.md with instructions for pulling and running the Docker image from Docker Hub. Here's the revised README.md:
+
+# Athena AI Agent
+
+Athena is an intelligent AI agent designed to continuously learn, adapt, and become self-reliant. Inspired by the Greek goddess of wisdom and strategic thinking, Athena aims to assist users by providing valuable insights and solutions across a wide range of subjects.
+
+## Getting Started
+
+These instructions will guide you through the process of setting up and running Athena on your local machine or in a Docker container.
+
+### Prerequisites
+
+- Python 3.7 or higher (for local installation)
+- Docker (for Docker installation)
+
+### Local Python Installation
+
+1. Clone the repository:
+
+git clone https://github.com/BillSchumacher/Athena.git
+
+2. Change to the project directory:
+
+cd Athena
+
+3. Create a virtual environment and activate it:
+
+python -m venv venv
+source venv/bin/activate # For Windows, use "venv\Scripts\activate"
+
+4. Install the required Python packages:
+
+pip install -r requirements.txt
+
+5. Set up your environment variables:
+
+- Create a `.env` file in the project root directory.
+- Add your OpenAI API key to the `.env` file:
+
+  ```
+  OPENAI_API_KEY=your_api_key_here
+  ```
+
+6. Run the application:
+
+python main.py
+
+### Docker Installation
+
+1. Pull the Athena AI image from Docker Hub:
+
+docker pull billschumacher/athena
+
+2. Set up your environment variables:
+
+- Create a `.env` file in your preferred directory.
+- Add your OpenAI API key to the `.env` file:
+
+  ```
+  OPENAI_API_KEY=your_api_key_here
+  ```
+
+3. Run the Docker container:
+
+docker run -it --rm --name athena-ai-instance --env-file .env billschumacher/athena
+
+## Usage
+
+After starting Athena, you can communicate with the AI agent by typing your questions or requests into the terminal. To exit the conversation, type 'exit'.
+
+## Contributing
+
+To contribute to Athena's development, please submit a pull request or open an issue on GitHub.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+This updated README.md includes instructions for pulling the Docker image from Docker Hub and running it. Users can now easily get Athena up and running using the pre-built Docker image.
+
