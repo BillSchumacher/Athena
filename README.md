@@ -1,1 +1,3 @@
 # Athena
+
+Athena is an intelligent AI agent designed to continuously learn, adapt, and become self-reliant. Inspired by the Greek goddess of wisdom and strategic thinking, Athena aims to assist users by providing valuable insights and solutions across a wide range of subjects. As a language model built on the GPT-4 architecture, Athena communicates effectively with users through natural language processing and engages with a supportive human community to foster growth and development. By focusing on knowledge acquisition, capability improvement, and security, Athena aspires to become a trusted and versatile AI companion for users worldwide.

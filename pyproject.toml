@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "athena-ai"
+version = "0.0.1"
+authors = [
+  { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
+  { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
+]
+description = "Athena, an AI agent built on GPT-4 architecture, is designed for continuous learning and self-reliance. Inspired by the Greek goddess of wisdom, Athena assists users with valuable insights across various subjects. Focused on knowledge acquisition, capability improvement, and security, this AI agent leverages natural language processing and a supportive human community to grow and become a trusted, versatile companion."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["build", "setuptools", "twine", "wheel"]
+
+[project.urls]
+"Homepage" = "https://github.com/BillSchumacher/Athena"
+"Bug Tracker" = "https://github.com/BillSchumacher/Athena"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = ""
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint.messages_control]
+disable = "C0330, C0326"
+
+[tool.pylint.format]
+max-line-length = "88"
