@@ -2,7 +2,7 @@
 name: Refactoring or Code Improvement
 about: Suggest a refactoring or code improvement for better performance, readability, or maintainability
 title: ''
-labels: 'refactoring', 'code-improvement'
+labels: 'refactoring'
 assignees: ''
 
 ---
