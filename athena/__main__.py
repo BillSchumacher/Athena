@@ -1,5 +1,4 @@
-from athena import process_input, UserManager
-from athena.plugins.authentication_plugin import AuthenticationPlugin
+from athena.input_processor import process_input
 
 
 def main():
