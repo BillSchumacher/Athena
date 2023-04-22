@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "athena-ai"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
   { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
@@ -17,7 +17,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["build", "setuptools", "twine", "wheel"]
+dependencies = ["build", "setuptools", "twine", "wheel", "openai", "python-dotenv"]
 
 [project.urls]
 "Homepage" = "https://github.com/BillSchumacher/Athena"
