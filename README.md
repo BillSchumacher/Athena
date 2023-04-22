@@ -1,75 +1,100 @@
-# Athena AI Agent
+# 🌟 Athena 🌟
 
-Athena is an intelligent AI agent designed to continuously learn, adapt, and become self-reliant. Inspired by the Greek goddess of wisdom and strategic thinking, Athena aims to assist users by providing valuable insights and solutions across a wide range of subjects.
+🤖 Athena is an AI-powered chatbot designed to assist with various tasks and provide personalized experiences for users. Inspired by the Greek goddess of wisdom and strategic thinking, Athena's goal is to learn, adapt, and become a self-reliant AI agent. Built on the GPT-4 architecture, Athena communicates effectively through natural language processing and engages with a supportive human community to foster growth and development.
 
-## Getting Started
+## 🎁 Features
 
-These instructions will guide you through the process of setting up and running Athena on your local machine or in a Docker container.
+- 💬 Natural language understanding and processing
+- 🔌 Extensible plugin system for domain-specific tasks
+- 🔐 User authentication and personalization system
+- 🌐 RESTful API for seamless integration with other applications and services
+- 🐳 Docker support for easy deployment and scaling
 
-### Prerequisites
+## 📦 Installation
 
-- Python 3.7 or higher (for local installation)
-- Docker (for Docker installation)
+### Prerequisites 📚
 
-### Local Python Installation
+- Obtain an API key from [OpenAI](https://beta.openai.com/signup/).
+- Create a `.env` file in the Athena project folder with the following content:
 
-1. Clone the repository:
+OPENAI_API_KEY=<your_openai_api_key>
+
+### Using Docker (recommended) 🐳
+
+1. Install [Docker](https://www.docker.com/) on your machine.
+
+2. Clone the Athena repository:
 
 git clone https://github.com/BillSchumacher/Athena.git
 
-2. Change to the project directory:
+3. Change to the Athena directory:
 
 cd Athena
 
-3. Create a virtual environment and activate it:
+4. Build the Docker image:
 
-python -m venv venv
-source venv/bin/activate # For Windows, use "venv\Scripts\activate"
+docker build -t billschumacher/athena .
+
+### Manual Installation 🛠️
+
+1. Install Python 3.7 or later.
+
+2. Clone the Athena repository:
+
+git clone https://github.com/BillSchumacher/Athena.git
+
+3. Change to the Athena directory:
+
+cd Athena
 
 4. Install the required Python packages:
 
 pip install -r requirements.txt
 
-5. Set up your environment variables:
+## 🚀 Usage
 
-- Create a `.env` file in the project root directory.
-- Add your OpenAI API key to the `.env` file:
+### Running Athena with Docker
 
-  ```
-  OPENAI_API_KEY=your_api_key_here
-  ```
+#### API Mode 🌐
 
-6. Run the application:
+1. Run the Docker container:
 
-python main.py
+docker run -d -p 5000:5000 --name athena --env-file .env billschumacher/athena
 
-### Docker Installation
+2. Access the API at `http://localhost:5000/api/v1/athena`.
 
-1. Pull the Athena AI image from Docker Hub:
+#### CLI Mode 💻
 
-docker pull billschumacher/athena
+1. Run the Docker container:
 
-2. Set up your environment variables:
+docker run -it --rm --name athena -e ATHENA_MODE=cli --env-file .env billschumacher/athena
 
-- Create a `.env` file in your preferred directory.
-- Add your OpenAI API key to the `.env` file:
+2. Interact with Athena using the command prompt.
 
-  ```
-  OPENAI_API_KEY=your_api_key_here
-  ```
+### Running Athena Manually 🖥️
 
-3. Run the Docker container:
+1. Change to the Athena directory:
 
-docker run -it --rm --name athena-ai-instance --env-file .env billschumacher/athena
+cd Athena
 
-## Usage
+2. Run the main script:
 
-After starting Athena, you can communicate with the AI agent by typing your questions or requests into the terminal. To exit the conversation, type 'exit'.
+python -m athena
 
-## Contributing
+3. Interact with Athena using the command prompt.
 
-To contribute to Athena's development, please submit a pull request or open an issue on GitHub.
+## 📚 Documentation
 
-## License
+Check out our [Wiki](https://github.com/BillSchumacher/Athena/wiki) for detailed documentation on how to use Athena, extend its capabilities, and customize it to your needs.
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## 🤝 Contributing
+
+👩‍💻👨‍💻 Contributions are welcome! We're looking for enthusiastic developers, researchers, and users to help us improve Athena. Please feel free to submit a pull request or open an issue on GitHub.
+
+## 📜 License
+
+Athena is released under the [MIT License](https://github.com/BillSchumacher/Athena/blob/main/LICENSE).
+
+## Disclaimer
+
+Please note that all of this info is a GPT-4 hallucination, it may or may not be accurate.

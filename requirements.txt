@@ -1,3 +1,4 @@
 openai
 python-dotenv
 rasa_nlu[spacy]
+Flask

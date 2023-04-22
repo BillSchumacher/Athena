@@ -1,0 +1,49 @@
+Me> Ok I think we're ready to continue, lets add new features and capabilities by developing a RESTful API to enable other applications and services to interact with Athena easily.
+
+Athena> To create a RESTful API for Athena, we can use the Flask web framework. This will allow other applications and services to interact with Athena by sending HTTP requests.
+
+First, install Flask:
+
+pip install Flask
+
+Next, create a new file named api.py inside the athena directory and add the following code:
+
+from flask import Flask, request, jsonify
+from athena import process_input
+
+app = Flask(__name__)
+
+@app.route('/api/v1/athena', methods=['POST'])
+def interact_with_athena():
+    data = request.get_json()
+    user_input = data.get('input', '')
+    username = data.get('username', None)
+    response = process_input(user_input, username)
+    return jsonify({'response': response})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+This code creates a simple Flask web application with one endpoint, /api/v1/athena, which accepts POST requests with JSON data containing the user's input and an optional username. The endpoint processes the input using Athena's process_input function and returns the response as JSON data.
+
+To run the API, simply execute the following command from the parent directory of the athena package:
+
+python -m athena.api
+
+This will start the Flask development server, and the API will be accessible at http://localhost:5000/api/v1/athena.
+
+To interact with the API, you can use tools like curl or Postman. Here's an example curl command:
+
+curl -X POST -H "Content-Type: application/json" -d '{"input": "What is the weather in San Francisco?", "username": "John"}' http://localhost:5000/api/v1/athena
+
+You can now build other applications and services that interact with Athena through this RESTful API.
+
+Me> We should add a way to launch the API using the Dockerfile, can you help me with that?
+
+Athena> Certainly! To launch the API using the Dockerfile, you'll need to make a few changes to the existing Dockerfile and update the command used to run the container.
+
+First, update the Dockerfile by adding the Flask installation and setting the default command to run the API. Modify the Dockerfile as follows:
+
+Me> I asked it to update the README again, copying the conversation is taking a long time so I'm stopping that here.
+
+I'm going to have it keep going just to see how far I can take it with minimal human assistance.
