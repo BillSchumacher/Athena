@@ -508,3 +508,197 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 This updated README.md includes instructions for pulling the Docker image from Docker Hub and running it. Users can now easily get Athena up and running using the pre-built Docker image.
 
+Me> Let's move on to adding new features and capabilities and create a plugin system to extend Athena's functionality with modules for specific tasks or domains, such as finance, health, or programming.
+
+Athena> 
+
+Creating a plugin system for Athena will allow you to modularly add new features and capabilities, making it easy to extend the AI's functionality for specific tasks or domains. Here's a high-level plan for implementing a plugin system:
+
+Define a base plugin class that all plugins will inherit from.
+Implement a plugin manager to discover, load, and manage plugins.
+Update the process_input function to utilize the plugin system.
+Create example plugins for specific tasks or domains.
+Step 1: Define a base plugin class
+Create a new file called plugin_base.py:
+
+class PluginBase:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    def can_process(self, input_text):
+        raise NotImplementedError("The 'can_process' method must be implemented in derived classes.")
+
+    def process(self, input_text):
+        raise NotImplementedError("The 'process' method must be implemented in derived classes.")
+
+This base class defines the structure that all plugins must follow. Each plugin should implement the can_process method to determine whether it can handle a given input, and the process method to handle the input and generate a response.
+
+Step 2: Implement a plugin manager
+Create a new file called plugin_manager.py:
+
+import os
+import importlib
+import pkgutil
+
+class PluginManager:
+    def __init__(self, plugin_base_class, plugin_package):
+        self.plugin_base_class = plugin_base_class
+        self.plugin_package = plugin_package
+        self.plugins = []
+
+    def discover_plugins(self):
+        plugins_path = os.path.dirname(self.plugin_package.__file__)
+        for (_, module_name, _) in pkgutil.iter_modules([plugins_path]):
+            module = importlib.import_module(f"{self.plugin_package.__name__}.{module_name}")
+            for plugin_class in module.__dict__.values():
+                if (isinstance(plugin_class, type) and
+                        issubclass(plugin_class, self.plugin_base_class) and
+                        plugin_class != self.plugin_base_class):
+                    self.plugins.append(plugin_class())
+
+    def process_input(self, input_text):
+        for plugin in self.plugins:
+            if plugin.can_process(input_text):
+                return plugin.process(input_text)
+        return None
+
+The PluginManager class discovers and loads plugins based on the specified base class and package. The discover_plugins method finds and imports all plugin modules in the given package, and the process_input method iterates through the loaded plugins to find one that can handle the input.
+
+Step 3: Update the process_input function
+In main.py, update the process_input function to use the PluginManager:
+
+from plugin_manager import PluginManager
+from plugin_base import PluginBase
+import plugins  # assuming plugins will be stored in a "plugins" directory/package
+
+def process_input(input_text):
+    plugin_manager = PluginManager(PluginBase, plugins)
+    plugin_manager.discover_plugins()
+
+    response = plugin_manager.process_input(input_text)
+    if response is None:
+        response = generate_response(input_text)
+    return response
+
+The updated process_input function creates a PluginManager instance, discovers the plugins, and processes the input using the plugins. If no plugin can handle the input, it falls back to the default generate_response method.
+
+Step 4: Create example plugins
+To create plugins, first create a new directory called plugins in your project. This is where you'll store all plugin files. For each plugin, create a new Python file in the plugins directory that defines a class that inherits from PluginBase and implements the can_process and
+
+Me> continue where you left off at
+
+Athena> process methods. Here's an example plugin for handling simple arithmetic operations:
+
+In the plugins directory, create a new file called arithmetic_plugin.py:
+
+import re
+from plugin_base import PluginBase
+
+class ArithmeticPlugin(PluginBase):
+    def __init__(self):
+        super().__init__("Arithmetic", "Performs basic arithmetic operations.")
+
+    def can_process(self, input_text):
+        return re.search(r'\b(?:add|subtract|multiply|divide)\b', input_text) is not None
+
+    def process(self, input_text):
+        input_text = input_text.lower()
+        numbers = [int(num) for num in re.findall(r'\d+', input_text)]
+        if "add" in input_text:
+            result = sum(numbers)
+            operation = "addition"
+        elif "subtract" in input_text:
+            result = numbers[0] - numbers[1]
+            operation = "subtraction"
+        elif "multiply" in input_text:
+            result = numbers[0] * numbers[1]
+            operation = "multiplication"
+        elif "divide" in input_text:
+            result = numbers[0] / numbers[1]
+            operation = "division"
+        else:
+            return "I'm not sure what operation to perform."
+        
+        return f"The result of the {operation} is {result}."
+
+This example plugin checks if the input contains arithmetic operation keywords (add, subtract, multiply, divide) and processes the input accordingly. It extracts numbers from the input and performs the specified operation.
+
+Update the process_input function in main.py to import the plugins package:
+
+from plugin_manager import PluginManager
+from plugin_base import PluginBase
+import plugins  # assuming plugins will be stored in a "plugins" directory/package
+
+def process_input(input_text):
+    plugin_manager = PluginManager(PluginBase, plugins)
+    plugin_manager.discover_plugins()
+
+    response = plugin_manager.process_input(input_text)
+    if response is None:
+        response = generate_response(input_text)
+    return response
+
+Now, when you run Athena, it will automatically discover and use the available plugins to process user input. You can easily extend Athena's functionality by adding more plugins for different tasks or domains, such as finance, health, or programming, following the same structure as the example plugin.
+
+Me> Earlier we changed process_input, integrate those changes with the version we updated here:
+
+def process_input(user_input):
+    # Use the Rasa NLU interpreter to parse the user input
+    parsed_input = interpreter.parse(user_input)
+
+    # Extract intent and entities from the parsed input
+    intent = parsed_input["intent"]["name"]
+    entities = {entity["entity"]: entity["value"] for entity in parsed_input["entities"]}
+
+    # Process the user input based on the identified intent and entities
+    if intent == "greet":
+        response = "Hello! How can I help you today?"
+    elif intent == "goodbye":
+        response = "Goodbye! Have a great day!"
+    elif intent == "ask_weather":
+        location = entities.get("location", "unknown")
+        response = f"I'm not currently able to check the weather, but you asked about {location}."
+    else:
+        prompt = f"Athena, please help me with the following: {user_input}"
+        response = generate_gpt3_response(prompt)
+
+    return response
+
+Athena> To integrate the previous changes made to the process_input function with the plugin system, you can update the process method in the example plugin to incorporate the intent and entity extraction using Rasa NLU. Here's the updated code for process_input in main.py:
+
+from plugin_manager import PluginManager
+from plugin_base import PluginBase
+import plugins  # assuming plugins will be stored in a "plugins" directory/package
+
+def process_input(user_input):
+    # Use the Rasa NLU interpreter to parse the user input
+    parsed_input = interpreter.parse(user_input)
+
+    # Extract intent and entities from the parsed input
+    intent = parsed_input["intent"]["name"]
+    entities = {entity["entity"]: entity["value"] for entity in parsed_input["entities"]}
+
+    # Create a PluginManager instance, discover the plugins, and process the input using the plugins
+    plugin_manager = PluginManager(PluginBase, plugins)
+    plugin_manager.discover_plugins()
+
+    response = plugin_manager.process_input(user_input)
+    if response is None:
+        if intent == "greet":
+            response = "Hello! How can I help you today?"
+        elif intent == "goodbye":
+            response = "Goodbye! Have a great day!"
+        elif intent == "ask_weather":
+            location = entities.get("location", "unknown")
+            response = f"I'm not currently able to check the weather, but you asked about {location}."
+        else:
+            prompt = f"Athena, please help me with the following: {user_input}"
+            response = generate_gpt3_response(prompt)
+
+    return response
+
+Now, the process_input function first attempts to process the user input using the available plugins. If no plugin can handle the input, it falls back to processing the input based on the intent and entities extracted using Rasa NLU.
+
+Note that this integration assumes your plugins do not rely on Rasa NLU for intent and entity extraction. If you want your plugins to utilize Rasa NLU, you should pass the parsed_input (which includes the intent and entities) to the can_process and process methods in the plugin system and update the plugin classes accordingly.
+

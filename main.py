@@ -6,6 +6,10 @@ from rasa_nlu.config import RasaNLUModelConfig
 from rasa_nlu.model import Trainer
 from rasa_nlu import config
 import warnings
+from plugin_manager import PluginManager
+from plugin_base import PluginBase
+import plugins  # assuming plugins will be stored in a "plugins" directory/package
+
 warnings.filterwarnings('ignore')
 
 training_data = load_data("nlu_data.md")
@@ -41,17 +45,22 @@ def process_input(user_input):
     intent = parsed_input["intent"]["name"]
     entities = {entity["entity"]: entity["value"] for entity in parsed_input["entities"]}
 
-    # Process the user input based on the identified intent and entities
-    if intent == "greet":
-        response = "Hello! How can I help you today?"
-    elif intent == "goodbye":
-        response = "Goodbye! Have a great day!"
-    elif intent == "ask_weather":
-        location = entities.get("location", "unknown")
-        response = f"I'm not currently able to check the weather, but you asked about {location}."
-    else:
-        prompt = f"Athena, please help me with the following: {user_input}"
-        response = generate_gpt3_response(prompt)
+    # Create a PluginManager instance, discover the plugins, and process the input using the plugins
+    plugin_manager = PluginManager(PluginBase, plugins)
+    plugin_manager.discover_plugins()
+
+    response = plugin_manager.process_input(user_input)
+    if response is None:
+        if intent == "greet":
+            response = "Hello! How can I help you today?"
+        elif intent == "goodbye":
+            response = "Goodbye! Have a great day!"
+        elif intent == "ask_weather":
+            location = entities.get("location", "unknown")
+            response = f"I'm not currently able to check the weather, but you asked about {location}."
+        else:
+            prompt = f"Athena, please help me with the following: {user_input}"
+            response = generate_gpt3_response(prompt)
 
     return response
 
