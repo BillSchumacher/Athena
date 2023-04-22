@@ -17,7 +17,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["build", "setuptools", "twine", "wheel", "openai", "python-dotenv"]
+dependencies = ["build", "setuptools", "twine", "wheel", "openai", "python-dotenv", "rasa_nlu[spacy]"]
 
 [project.urls]
 "Homepage" = "https://github.com/BillSchumacher/Athena"
