@@ -1,0 +1,23 @@
+.message-bubble {
+    display: inline-block;
+    max-width: 70%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  
+  .user-message {
+    background-color: #cce5ff;
+    color: #004085;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+  }
+  
+  .athena-message {
+    background-color: #007bff;
+    color: #ffffff;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+  }

@@ -1,0 +1,12 @@
+/* Message.css */
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+  
+  .message.user {
+    justify-content: flex-end;
+  }
+  

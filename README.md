@@ -14,6 +14,13 @@
 
 ### Prerequisites 📚
 
+Before you begin, ensure you have the following installed:
+
+- [Python 3.7](https://www.python.org/downloads/release/python-370/)
+- [Docker](https://www.docker.com/get-started)
+- [Node.js](https://nodejs.org/) (for running the React app)
+
+Then:
 - Obtain an API key from [OpenAI](https://beta.openai.com/signup/).
 - Create a `.env` file in the Athena project folder with the following content:
 
@@ -62,6 +69,22 @@ pip install -r requirements.txt
 docker run -d -p 5000:5000 --name athena --env-file .env billschumacher/athena
 
 2. Access the API at `http://localhost:5000/api/v1/athena`.
+### Running the React App
+
+1. Navigate to the `athena-app` directory:
+
+cd athena-app
+
+2. Install the required dependencies:
+
+npm install
+
+3. Start the React development server:
+
+npm start
+
+The React app should now be running on [http://localhost:3000](http://localhost:3000).
+
 
 #### CLI Mode 💻
 

@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from athena.input_processor import process_input
 
 app = Flask(__name__)
+CORS(app) #, origins=["http://localhost:3000"]) 
 
 
 @app.route('/api/v1/athena', methods=['POST'])

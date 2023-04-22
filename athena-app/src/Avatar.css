@@ -1,0 +1,19 @@
+/* Avatar.css */
+.avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #6f42c1;
+    user-select: none;
+  }
+  
+  .avatar.dark {
+    background-color: #563d7c;
+  }
+  
