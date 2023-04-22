@@ -114,6 +114,8 @@ Check out our [Wiki](https://github.com/BillSchumacher/Athena/wiki) for detailed
 
 👩‍💻👨‍💻 Contributions are welcome! We're looking for enthusiastic developers, researchers, and users to help us improve Athena. Please feel free to submit a pull request or open an issue on GitHub.
 
+See [Contributing](https://github.com/BillSchumacher/Athena/blob/main/CONTRIBUTING.md)
+
 ## 📜 License
 
 Athena is released under the [MIT License](https://github.com/BillSchumacher/Athena/blob/main/LICENSE).
