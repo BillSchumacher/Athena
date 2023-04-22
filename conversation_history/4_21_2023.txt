@@ -148,3 +148,33 @@ This updated process_input function uses the GPT-3 API to generate more meaningf
 
 Note that using the GPT-3 API may incur costs depending on your usage. Make sure to review OpenAI's pricing details and adjust the API parameters (e.g., max_tokens) to manage your usage as needed.
 
+Me> I already have an OpenAI API key and I'm not worried about how much it will cost, I am concerned about committing my API key to your git repository as a part of the source code.
+
+Athena> That's a valid concern. To avoid committing your API key to the git repository, you can use environment variables to securely store and access the key. Here's how you can do that:
+
+Install the python-dotenv package:
+
+pip install python-dotenv
+
+Create a .env file in the same directory as your main Python script and add the following line:
+
+OPENAI_API_KEY=your_api_key_here
+
+Make sure to replace your_api_key_here with your actual API key.
+
+Add the .env file to your .gitignore file to prevent it from being committed to the repository:
+
+.env
+
+Update your Python script to load the API key from the environment variable:
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Load the API key from the environment variable
+
+openai.api_key = os.environ["OPENAI_API_KEY"]
+
+By following these steps, you can keep your API key secure and prevent it from being accidentally committed to the git repository.
