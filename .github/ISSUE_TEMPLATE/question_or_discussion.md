@@ -2,7 +2,7 @@
 name: Question or Discussion
 about: Ask a question or start a discussion related to the project
 title: ''
-labels: 'question', 'discussion'
+labels: 'question'
 assignees: ''
 
 ---
