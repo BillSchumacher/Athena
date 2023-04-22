@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "athena-ai"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
   { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
@@ -21,13 +21,13 @@ dependencies = ["build", "setuptools", "twine", "wheel", "openai",
  "python-dotenv", "rasa_nlu", "scikit-learn", "spacy"]
 
 [project.scripts]
-athena = "main:main"
+athena = "athena.__main__:main"
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel.force-include]
-"bin/athena.py" = "main.py"
+"bin/athena.py" = "athena/__main__.py"
 
 [project.urls]
 "Homepage" = "https://github.com/BillSchumacher/Athena"

@@ -846,3 +846,117 @@ Me> It seems like we should ask the user for their name instead of using a mock 
 
 Athena> You're right. Let's update the main loop in main.py to ask for the user's name before starting the conversation. We will also store the entered name as the username for the personalized experience.
 
+Me> Before continuing I think we should cleanup the structure of the code, what do you think?
+
+Athena> Yes, it's a good idea to organize the code to improve readability, maintainability, and make it easier to add new features in the future. Here's a suggestion for cleaning up the structure:
+
+Create a new directory called athena and move main.py inside it.
+Rename main.py to __init__.py. This will make athena a package.
+Move the UserManager class into a new file called user_manager.py inside the athena directory.
+Move the PluginBase, PluginManager, and all plugin-related code into a new directory called plugins inside the athena directory. You can further organize this by having separate files for each plugin class.
+Update the imports in all files to reflect the new structure.
+After reorganizing, your directory structure should look like this:
+
+
+athena/
+│   __init__.py
+│   user_manager.py
+│
+└───plugins/
+    │   __init__.py
+    │   plugin_base.py
+    │   plugin_manager.py
+    │   authentication_plugin.py
+    │   ... (other plugin files)
+
+In the new __init__.py (previously main.py), update the imports:
+
+from .user_manager import UserManager
+from .plugins import PluginManager, PluginBase, AuthenticationPlugin
+
+In user_manager.py, make sure to define the UserManager class.
+
+In the plugins directory, create an __init__.py file to make it a package, and update the imports in the plugin files to use relative imports, like:
+
+from .plugin_base import PluginBase
+
+Now, the code should be cleaner and more organized, making it easier to add new features and maintain the codebase.
+
+Me> Shouldn't we move our main function into a __main__ file?
+
+Athena> Yes, that's a great idea! Separating the main function into a __main__.py file is a Python best practice that makes your code more modular and makes it easier to use your package as both a library and a standalone application.
+
+To implement this change, follow these steps:
+
+Create a new file named __main__.py inside the athena directory.
+Move the main function (the part of the code that starts the conversation loop) from __init__.py to __main__.py.
+In the new __main__.py file, you should have:
+
+from . import process_input, UserManager
+from .plugins import AuthenticationPlugin
+
+def main():
+    print("Welcome to Athena!")
+    username = input("Please enter your name: ")
+    
+    while True:
+        user_input = input(f"{username}: ")
+        if user_input.lower() in ["exit", "quit"]:
+            break
+
+        response = process_input(user_input, username)
+        print(f"Athena: {response}")
+
+if __name__ == "__main__":
+    main()
+
+After making these changes, you can run your package as a standalone application by executing the following command from the parent directory of the athena package:
+
+python -m athena
+
+This command runs the __main__.py script as the main entry point for the athena package.
+
+Me> I've updated your main function to look like this:
+
+def main():
+    print("Welcome to Athena!")
+    username = input("Please enter your name: ")
+
+    try:
+        while True:
+            user_input = input(f"{username}: ")
+            if user_input.lower() in ["exit", "quit"]:
+                break
+
+            response = process_input(user_input, username)
+            print(f"Athena: {response}")
+    except KeyboardInterrupt:
+        pass
+    print("Athena: Goodbye!")
+
+
+if __name__ == "__main__":
+    main()
+
+Athena> This updated version of the main function improves the user experience by handling the KeyboardInterrupt exception. When the user presses Ctrl+C, the program will now exit gracefully, displaying a goodbye message instead of a traceback error. The updated code is as follows:
+
+def main():
+    print("Welcome to Athena!")
+    username = input("Please enter your name: ")
+
+    try:
+        while True:
+            user_input = input(f"{username}: ")
+            if user_input.lower() in ["exit", "quit"]:
+                break
+
+            response = process_input(user_input, username)
+            print(f"Athena: {response}")
+    except KeyboardInterrupt:
+        pass
+    print("Athena: Goodbye!")
+
+if __name__ == "__main__":
+    main()
+
+This is a great improvement to the code, making it more user-friendly and providing a better experience for users when they decide to exit the application.

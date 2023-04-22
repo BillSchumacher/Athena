@@ -6,11 +6,11 @@ from rasa_nlu.config import RasaNLUModelConfig
 from rasa_nlu.model import Trainer
 from rasa_nlu import config
 import warnings
-from plugin_manager import PluginManager
-from plugin_base import PluginBase
+from athena.plugins.plugin_manager import PluginManager
+from athena.plugins.plugin_base import PluginBase
 import plugins  # assuming plugins will be stored in a "plugins" directory/package
-from user_manager import UserManager
-from authentication_plugin import AuthenticationPlugin
+from athena.user_manager import UserManager
+from athena.plugins.authentication_plugin import AuthenticationPlugin
 
 warnings.filterwarnings('ignore')
 
@@ -75,24 +75,3 @@ def process_input(user_input, username=None):
 
     return response
 
-
-def main():
-    print("Welcome to Athena!")
-    username = input("Please enter your name: ")
-
-    try:
-        while True:
-            user_input = input(f"{username}: ")
-            if user_input.lower() in ["exit", "quit"]:
-                break
-
-            if user_input.lower() in ["exit", "quit"]:
-                break
-            response = process_input(user_input, username)
-            print(f"Athena: {response}")
-    except KeyboardInterrupt:
-        pass
-    print("Athena: Goodbye!")
-
-if __name__ == "__main__":
-    main()

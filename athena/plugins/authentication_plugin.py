@@ -1,4 +1,4 @@
-from plugin_base import PluginBase
+from athena.plugins.plugin_base import PluginBase
 
 
 class AuthenticationPlugin(PluginBase):

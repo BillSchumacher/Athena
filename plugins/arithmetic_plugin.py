@@ -1,5 +1,5 @@
 import re
-from plugin_base import PluginBase
+from athena.plugins.plugin_base import PluginBase
 
 
 class ArithmeticPlugin(PluginBase):

@@ -33,4 +33,4 @@ COPY . .
 
 
 # Run the application
-CMD ["python", "main.py"]
+CMD ["python", "-m", "athena"]
