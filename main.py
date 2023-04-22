@@ -9,6 +9,8 @@ import warnings
 from plugin_manager import PluginManager
 from plugin_base import PluginBase
 import plugins  # assuming plugins will be stored in a "plugins" directory/package
+from user_manager import UserManager
+from authentication_plugin import AuthenticationPlugin
 
 warnings.filterwarnings('ignore')
 
@@ -37,7 +39,11 @@ def generate_gpt3_response(prompt):
     return response.choices[0].text.strip()
 
 
-def process_input(user_input):
+user_manager = UserManager()
+auth_plugin = AuthenticationPlugin(user_manager)
+
+
+def process_input(user_input, username=None):
     # Use the Rasa NLU interpreter to parse the user input
     parsed_input = interpreter.parse(user_input)
 
@@ -46,9 +52,14 @@ def process_input(user_input):
     entities = {entity["entity"]: entity["value"] for entity in parsed_input["entities"]}
 
     # Create a PluginManager instance, discover the plugins, and process the input using the plugins
-    plugin_manager = PluginManager(PluginBase, plugins)
+    plugin_manager = PluginManager(PluginBase, plugins, extra_plugins=[auth_plugin])
     plugin_manager.discover_plugins()
 
+    if username is not None:
+        personalization_data = user_manager.get_user_preference(username, "personalization_data")
+        if personalization_data is not None:
+            # Apply personalization logic using personalization_data
+            pass
     response = plugin_manager.process_input(user_input)
     if response is None:
         if intent == "greet":
@@ -66,18 +77,22 @@ def process_input(user_input):
 
 
 def main():
-    print("Welcome to Athena, the AI Agent. Type 'exit' to end the conversation.")
+    print("Welcome to Athena!")
+    username = input("Please enter your name: ")
 
-    while True:
-        user_input = input("User: ")
+    try:
+        while True:
+            user_input = input(f"{username}: ")
+            if user_input.lower() in ["exit", "quit"]:
+                break
 
-        if user_input.lower() == 'exit':
-            print("Athena: Goodbye!")
-            break
-
-        response = process_input(user_input)
-        print("Athena:", response)
-
+            if user_input.lower() in ["exit", "quit"]:
+                break
+            response = process_input(user_input, username)
+            print(f"Athena: {response}")
+    except KeyboardInterrupt:
+        pass
+    print("Athena: Goodbye!")
 
 if __name__ == "__main__":
     main()
