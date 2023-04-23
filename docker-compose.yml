@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  athena:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+  tests:
+    build: .
+    environment:
+      ATHENA_MODE: test
+    volumes:
+      - .:/app

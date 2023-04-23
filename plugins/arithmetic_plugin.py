@@ -26,5 +26,5 @@ class ArithmeticPlugin(PluginBase):
             operation = "division"
         else:
             return "I'm not sure what operation to perform."
-        
+
         return f"The result of the {operation} is {result}."

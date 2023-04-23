@@ -22,6 +22,8 @@ RUN  ln -s /usr/include/freetype2/ft2build.h /usr/include/
 # Copy the requirements.txt file into the container
 COPY requirements.txt .
 
+RUN pip install pytest
+
 # Install the required packages
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -30,7 +32,7 @@ RUN python -m spacy download en_core_web_md
 
 # Copy the rest of the application code into the container
 COPY . .
-
+RUN pip install -e .
 # Expose the port the API will run on
 EXPOSE 5000
 
