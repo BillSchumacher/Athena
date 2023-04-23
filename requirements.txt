@@ -1,6 +1,6 @@
 openai
 python-dotenv
-rasa_nlu[spacy]
+spacy[transformers]
 Flask
 flask-cors
 loguru

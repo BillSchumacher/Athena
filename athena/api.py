@@ -4,6 +4,8 @@ from flask import Flask
 from flask_cors import CORS
 from athena.loguru_config import setup_logging
 from athena.api_views.chat import chat_api
+from athena.nlu_utils import train_intent_classifier
+from athena.intentions_data import INTENTIONS_TRAIN_DATA
 
 
 app = Flask(__name__)
@@ -20,6 +22,7 @@ app.register_blueprint(chat_api, url_prefix="/api/v1")
 )
 def main(log_level) -> None:
     setup_logging(log_level)
+    train_intent_classifier(INTENTIONS_TRAIN_DATA)
     app.run(host='0.0.0.0', port=5000)
 
 

@@ -2,7 +2,7 @@ from athena.plugins.plugin_manager import PluginManager
 from athena.plugins.plugin_base import PluginBase
 import plugins
 from athena.gpt3_utils import generate_gpt3_response
-from athena.nlu_utils import interpreter
+from athena.nlu_utils import predict_intent
 from athena.user_manager import UserManager
 from athena.plugins.authentication_plugin import AuthenticationPlugin
 from loguru import logger
@@ -11,10 +11,11 @@ user_manager = UserManager()
 auth_plugin = AuthenticationPlugin(user_manager)
 
 
-def process_input(user_input, username=None):
+def process_input(nlp, user_input, username=None):
     logger.info(f"User input received: {user_input}")
     # Use the Rasa NLU interpreter to parse the user input
-    parsed_input = interpreter.parse(user_input)
+
+    parsed_input = predict_intent(nlp, user_input)
     logger.debug(f"Parsed input: {parsed_input}")
 
     # Extract intent and entities from the parsed input

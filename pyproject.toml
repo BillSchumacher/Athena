@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["build", "setuptools", "twine", "wheel", "openai", "loguru", "click",
- "python-dotenv", "rasa_nlu", "scikit-learn", "spacy", "Flask", "flask-cors"]
+ "python-dotenv", "spacy==3.1.0", "Flask", "flask-cors"]
 
 [project.scripts]
 athena = "athena.__main__:main"
