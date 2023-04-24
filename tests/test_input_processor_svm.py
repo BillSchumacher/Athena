@@ -1,10 +1,10 @@
 from athena.input_processor import process_input
-from athena.nlu.intentions_data import INTENTIONS_TRAIN_DATA
+from athena.nlu.intentions_data import INTENTS, SENTENCES
 from athena.nlu.nltk_entities import NLTKEntityExtraction
 from athena.nlu.nltk_intent import NLTKIntentClassification
 
-intent_pipeline = NLTKIntentClassification()
-intent_pipeline.train(INTENTIONS_TRAIN_DATA)
+intent_pipeline = NLTKIntentClassification(use_svm=True)
+intent_pipeline.train((SENTENCES, INTENTS))
 entity_pipeline = NLTKEntityExtraction()
 
 

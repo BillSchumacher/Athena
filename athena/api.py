@@ -1,14 +1,35 @@
 import os
+
 import click
 from flask import Flask
 from flask_cors import CORS
-from athena.loguru_config import setup_logging
-from athena.api_views.chat import chat_api
 
+from athena.api_views.chat import chat_api
+from athena.loguru_config import setup_logging
+from athena.nlu.intentions_data import INTENTIONS_TRAIN_DATA, INTENTS, SENTENCES
+from athena.nlu.nltk_entities import NLTKEntityExtraction
+from athena.nlu.nltk_intent import NLTKIntentClassification
 
 app = Flask(__name__)
 CORS(app)  # , origins=["http://localhost:3000"])
 app.register_blueprint(chat_api, url_prefix="/api/v1")
+
+
+class InputExtension:
+    def __init__(self, app=None):
+        self.intent_pipeline = None
+        self.entity_pipeline = None
+        if app is not None:
+            self.init_app(app)
+
+    def init_app(self, app):
+        if os.getenv("USE_SVM", "True") == "True":
+            self.intent_pipeline = NLTKIntentClassification(use_svm=True)
+            self.intent_pipeline.train((SENTENCES, INTENTS))
+        else:
+            self.intent_pipeline = NLTKIntentClassification()
+            self.intent_pipeline.train(INTENTIONS_TRAIN_DATA)
+        self.entity_pipeline = NLTKEntityExtraction()
 
 
 @click.command()
@@ -20,8 +41,10 @@ app.register_blueprint(chat_api, url_prefix="/api/v1")
 )
 def main(log_level) -> None:
     setup_logging(log_level)
-    app.run(host='0.0.0.0', port=5000)
+    input_extension = InputExtension(app)
+    app.extensions["input"] = input_extension
+    app.run(host="0.0.0.0", port=5000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
