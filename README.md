@@ -23,41 +23,58 @@ Before you begin, ensure you have the following installed:
 Then:
 - Obtain an API key from [OpenAI](https://beta.openai.com/signup/).
 - Create a `.env` file in the Athena project folder with the following content:
-
+```
 OPENAI_API_KEY=<your_openai_api_key>
-
+```
 ### Using Docker (recommended) 🐳
 
 1. Install [Docker](https://www.docker.com/) on your machine.
 
 2. Clone the Athena repository:
-
+```
 git clone https://github.com/BillSchumacher/Athena.git
-
+```
 3. Change to the Athena directory:
-
+```
 cd Athena
-
+```
 4. Build the Docker image:
 
-docker build -t billschumacher/athena .
+Docker:
+```
+docker-compose up
+```
+
+These scripts just run docker-compose up, but tab complete.
+
+On Windows:
+
+```
+.\run_app.bat
+```
+
+On Linux:
+
+```
+./run_app.sh
+```
 
 ### Manual Installation 🛠️
 
 1. Install Python 3.7 or later.
 
 2. Clone the Athena repository:
-
+```
 git clone https://github.com/BillSchumacher/Athena.git
-
+```
 3. Change to the Athena directory:
-
+```
 cd Athena
-
+```
 4. Install the required Python packages:
-
+```
 pip install -r requirements.txt
-
+```
 ## 🚀 Usage
 
 ### Running Athena with Docker
@@ -65,46 +82,53 @@ pip install -r requirements.txt
 #### API Mode 🌐
 
 1. Run the Docker container:
-
-docker run -d -p 5000:5000 --name athena --env-file .env billschumacher/athena
-
+```
+docker run -d -p 5000:5000 --name athena --env-file .env billschumacher/athena-api
+```
 2. Access the API at `http://localhost:5000/api/v1/athena`.
 ### Running the React App
 
 1. Navigate to the `athena-app` directory:
-
+```
 cd athena-app
-
+```
 2. Install the required dependencies:
-
+```
 npm install
-
+```
 3. Start the React development server:
-
+```
 npm start
-
+```
 The React app should now be running on [http://localhost:3000](http://localhost:3000).
 
 
 #### CLI Mode 💻
 
 1. Run the Docker container:
-
+```
 docker run -it --rm --name athena -e ATHENA_MODE=cli --env-file .env billschumacher/athena
-
+```
 2. Interact with Athena using the command prompt.
 
 ### Running Athena Manually 🖥️
 
 1. Change to the Athena directory:
-
+```
 cd Athena
-
+```
 2. Run the main script:
-
+```
 python -m athena
-
+```
 3. Interact with Athena using the command prompt.
+
+## Debugging
+
+In your .env add:
+```
+LOG_LEVEL=DEBUG
+```
 
 ## 🌟 Community 🌟
 
