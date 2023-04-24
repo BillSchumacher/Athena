@@ -1,7 +1,11 @@
 openai
 python-dotenv
-rasa_nlu[spacy]
+nltk
+scikit-learn
 Flask
 flask-cors
 loguru
 click
+black
+isort
+pytest

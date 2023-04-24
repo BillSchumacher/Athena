@@ -11,16 +11,15 @@ class UserManager:
         if username in self.users:
             logger.debug(f"User {username} already exists.")
             return False
-        self.users[username] = {
-            "password": password,
-            "preferences": {}
-        }
+        self.users[username] = {"password": password, "preferences": {}}
         logger.debug(f"User {username} registered successfully.")
         return True
 
     def authenticate_user(self, username, password):
         logger.debug(f"Authenticating user {username}...")
-        success = username in self.users and self.users[username]["password"] == password
+        success = (
+            username in self.users and self.users[username]["password"] == password
+        )
         if success:
             logger.debug(f"User {username} authenticated successfully.")
         else:
@@ -39,7 +38,9 @@ class UserManager:
     def get_user_preference(self, username, key):
         logger.debug(f"Getting user preference {key} for user {username}...")
         if username in self.users and key in self.users[username]["preferences"]:
-            logger.debug(f"User preference {key} found: {self.users[username]['preferences'][key]}")
+            logger.debug(
+                f"User preference {key} found: {self.users[username]['preferences'][key]}"
+            )
             return self.users[username]["preferences"][key]
         logger.debug(f"User preference {key} not found.")
         return None

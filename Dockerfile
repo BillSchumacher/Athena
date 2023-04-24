@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.7
+FROM python:3.10
 
 RUN mkdir -p /app
 
@@ -26,9 +26,6 @@ RUN pip install pytest
 
 # Install the required packages
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install the Spacy language model
-RUN python -m spacy download en_core_web_md
 
 # Copy the rest of the application code into the container
 COPY . .
