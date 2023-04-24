@@ -155,3 +155,8 @@ Athena is released under the [MIT License](https://github.com/BillSchumacher/Ath
 ## Disclaimer
 
 Please note that all of this info is a GPT-4 hallucination, it may or may not be accurate.
+
+Current state:
+
+![Dark Mode](https://raw.githubusercontent.com/BillSchumacher/Athena/main/screenshots/ss_dark.png)
+![Light Mode](https://raw.githubusercontent.com/BillSchumacher/Athena/main/screenshots/ss_light.png)
