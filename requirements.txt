@@ -6,6 +6,4 @@ Flask
 flask-cors
 loguru
 click
-black
-isort
-pytest
+gunicorn

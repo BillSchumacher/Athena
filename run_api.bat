@@ -1,1 +1,1 @@
-docker-compose up --build athena
+docker-compose up --build api

@@ -37,7 +37,7 @@ class NLTKIntentClassification(IntentClassificationBase):
     def train_with_svm(self, training_data):
         sentences, intents = training_data
         X_train, X_test, y_train, y_test = train_test_split(
-            sentences, intents, test_size=0.1
+            sentences, intents, test_size=0.1, random_state=42
         )
 
         # Create a pipeline with TfidfVectorizer and an SVM classifier
@@ -48,16 +48,17 @@ class NLTKIntentClassification(IntentClassificationBase):
             ]
         )
         # Train the classifier
-        pipeline.fit(X_train, y_train)
+        for _ in range(10):
+            pipeline.fit(X_train, y_train)
         y_pred = pipeline.predict(X_test)
         print(classification_report(y_test, y_pred))
         return pipeline
 
     def train_with_multinomial_nb(self, training_data):
         vectorizer = TfidfVectorizer(
-            tokenizer=self.tokenize_and_preprocess  # , ngram_range=(1, 2)
+            tokenizer=self.tokenize_and_preprocess, ngram_range=(1, 2)
         )
-        classifier = MultinomialNB()  # alpha=0.75)
+        classifier = MultinomialNB(alpha=0.85)
         pipeline = Pipeline([("vectorizer", vectorizer), ("classifier", classifier)])
 
         texts, intents = zip(*training_data)

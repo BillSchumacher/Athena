@@ -5,15 +5,16 @@ services:
     build:
       context: .
       target: nginx-stage
-    image: athena-nginx:latest
+    image: billschumacher/athena-nginx:latest
     ports:
       - "80:80"
+
   api:
     build:
       context: .
       target: python-stage
-    environment:
-      ATHENA_MODE: api
-    image: athena-api:latest
+    image: billschumacher/athena-api:latest
     ports:
       - "5000:5000"
+    env_file:
+      - .env

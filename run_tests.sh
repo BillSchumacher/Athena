@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose up --build tests
+docker-compose -f docker-compose.test.yml up --remove-orphans --build --exit-code-from test

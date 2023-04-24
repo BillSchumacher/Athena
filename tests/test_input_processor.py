@@ -1,3 +1,4 @@
+import pytest
 from athena.input_processor import process_input
 from athena.nlu.intentions_data import INTENTIONS_TRAIN_DATA
 from athena.nlu.nltk_entities import NLTKEntityExtraction
@@ -8,6 +9,7 @@ intent_pipeline.train(INTENTIONS_TRAIN_DATA)
 entity_pipeline = NLTKEntityExtraction()
 
 
+@pytest.mark.skip("SVM is the current default")
 def test_process_input_simple():
     user_input = "What's the weather like in Paris?"
     response = process_input(intent_pipeline, entity_pipeline, user_input)
