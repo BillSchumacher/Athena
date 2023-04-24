@@ -33,7 +33,7 @@ class PluginManager:
                     self.plugins.append(plugin)
 
     def process_input(self, input_text):
-        logger.debug(f"Plugins - Processing input text...")
+        logger.debug("Plugins - Processing input text...")
         for plugin in self.plugins:
             logger.debug(f"Checking if plugin {plugin.name} can process input...")
             if plugin.can_process(input_text):

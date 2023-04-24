@@ -13,8 +13,8 @@ def athena_chat():
     user_input = data.get("input")
     username = data.get("username", None)
     logger.debug(f"User input: {user_input} Username: {username}")
-    input_ext = current_app.extensions["input"]
     if user_input:
+        input_ext = current_app.extensions["input"]
         response = process_input(
             input_ext.intent_pipeline, input_ext.entity_pipeline, user_input, username
         )

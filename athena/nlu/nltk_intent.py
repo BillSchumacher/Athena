@@ -80,13 +80,11 @@ class NLTKIntentClassification(IntentClassificationBase):
 
     def predict_intents_with_confidence(self, text):
         intent_probabilities = self._model.predict_proba([text])[0]
-        intents_confidence = sorted(
+        return sorted(
             zip(self._model.classes_, intent_probabilities),
             key=lambda x: x[1],
             reverse=True,
         )
-
-        return intents_confidence
 
     def __call__(self, text):
         return self.process(text)
@@ -94,5 +92,4 @@ class NLTKIntentClassification(IntentClassificationBase):
     def tokenize_and_preprocess(self, text):
         tokens = nltk.word_tokenize(text)
         filtered_tokens = [token for token in tokens if token not in self.stop_words]
-        stemmed_tokens = [self.stemmer.stem(token) for token in filtered_tokens]
-        return stemmed_tokens
+        return [self.stemmer.stem(token) for token in filtered_tokens]
