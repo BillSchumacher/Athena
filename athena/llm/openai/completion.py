@@ -7,12 +7,19 @@ from loguru import logger
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
-def generate_gpt3_response(
-    prompt, model="davinci", max_tokens=100, temperature=0.8, stop=None, n=1
+def openai_completion(
+    prompt,
+    model="davinci",
+    max_tokens=512,
+    temperature=0.8,
+    stop="\nHuman:",
+    n=1,
+    best_of=1,
 ):
-    logger.debug(f"Generating GPT-3 response using prompt: {prompt}")
+    logger.debug(f"Generating OpenAI Completion using prompt: {prompt}")
     logger.debug(
-        f"Model: {model}, max_tokens: {max_tokens}, temperature: {temperature}, stop: {stop}, n: {n}"
+        f"Model: {model}, max_tokens: {max_tokens}, "
+        f"temperature: {temperature}, stop: {stop}, n: {n}"
     )
     response = openai.Completion.create(
         engine=model,  # Choose the desired model, e.g., "davinci", "curie", "babbage", "davinci-codex", etc.
@@ -20,7 +27,8 @@ def generate_gpt3_response(
         max_tokens=max_tokens,
         n=n,
         stop=stop,
+        best_of=best_of,
         temperature=temperature,
     )
-    logger.debug(f"GPT-3 response: {response}")
+    logger.debug(f"OpenAI Completion: {response}")
     return response.choices[0].text.strip()

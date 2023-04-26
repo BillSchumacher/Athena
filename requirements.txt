@@ -7,3 +7,12 @@ flask-cors
 loguru
 click
 gunicorn
+#spacy[transformers]
+#accelerate
+#auto-vicuna
+#--extra-index-url https://pypi.ngc.nvidia.com
+#nvidia-cuda-runtime-cu11 
+#--extra-index-url https://download.pytorch.org/whl/cu117
+#torch
+#torchvision
+#torchaudio

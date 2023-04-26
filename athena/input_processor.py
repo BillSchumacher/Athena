@@ -1,17 +1,26 @@
 from loguru import logger
 
 import plugins
-from athena.gpt3_utils import generate_gpt3_response
+from athena.llm.openai.completion import openai_completion
 from athena.plugins.authentication_plugin import AuthenticationPlugin
 from athena.plugins.plugin_base import PluginBase
 from athena.plugins.plugin_manager import PluginManager
+from athena.prompt import SYSTEM_PROMPT
 from athena.user_manager import UserManager
 
 user_manager = UserManager()
 auth_plugin = AuthenticationPlugin(user_manager)
 
 
-def process_input(intent_pipelein, entity_pipeline, user_input, username=None):
+def process_input(
+    intent_pipelein,
+    entity_pipeline,
+    user_input,
+    username=None,
+    completion_callback=None,
+):
+    if not completion_callback:
+        completion_callback = openai_completion
     logger.info(f"User input received: {user_input}")
     if user_input == "":
         return "I'm sorry, I didn't receive any input. Can you please try again?"
@@ -42,13 +51,12 @@ def process_input(intent_pipelein, entity_pipeline, user_input, username=None):
             logger.debug("No personalization data found.")
 
     response = plugin_manager.process_input(user_input)
-
+    prompt = f"{SYSTEM_PROMPT}{user_input}"
     if response is None and intent_confidence < 0.65:
         logger.debug(
             "No plugin was able to process the input and the intent confidence is low. Using GPT-3 to generate a response."
         )
-        prompt = f"Athena, please help me with the following: {user_input}"
-        response = generate_gpt3_response(prompt)
+        response = completion_callback(prompt)
 
     if response is None:
         logger.debug("No plugin was able to process the input. Using default logic.")
@@ -69,7 +77,7 @@ def process_input(intent_pipelein, entity_pipeline, user_input, username=None):
             response = f"I'm not currently able to check the weather, but you asked about {location}."
         else:
             logger.debug("No intent was detected. Using GPT-3 to generate a response.")
-            prompt = f"Athena, please help me with the following: {user_input}"
-            response = generate_gpt3_response(prompt)
+
+            response = completion_callback(prompt)
     logger.info(f"Response generated: {response}")
     return response

@@ -33,7 +33,7 @@ def main(log_level):
             response = process_input(
                 intent_pipeline, entity_pipeline, user_input, username
             )
-            print(f"Athena: {response}")
+            print(f"{response}")
     except KeyboardInterrupt:
         pass
     print("Athena: Goodbye!")

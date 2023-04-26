@@ -1,4 +1,5 @@
 import pytest
+
 from athena.input_processor import process_input
 from athena.nlu.intentions_data import INTENTIONS_TRAIN_DATA
 from athena.nlu.nltk_entities import NLTKEntityExtraction
