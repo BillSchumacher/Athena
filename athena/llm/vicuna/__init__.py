@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Optional
 
 try:
     import torch
@@ -38,8 +39,23 @@ VICUNA_ERROR = (
 )
 
 
-def generate_text(prompt, temperature=0.8, max_tokens=2048) -> str | None:
-    if not load_model or not make_conversation or not chat_one_shot:
+def generate_text(
+    prompt: str, temperature: float = 0.8, max_tokens: int = 2048
+) -> Optional[str]:
+    """Generates text using the Vicuna model.
+
+    Args:
+        prompt (str): The prompt to generate the text from.
+        temperature (float, optional): The temperature to use for text generation.
+          Defaults to 0.8.
+        max_tokens (int, optional): The maximum number of tokens to generate.
+          Defaults to 2048.
+
+    Returns:
+        str: The generated text, or None if the Vicuna model was not loaded
+          successfully.
+    """
+    if not vicuna_model or not make_conversation or not chat_one_shot:
         logger.error(VICUNA_ERROR)
         return None
 
