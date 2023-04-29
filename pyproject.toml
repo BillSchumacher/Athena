@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "athena-ai"
-version = "0.0.11"
+version = "0.0.12"
 authors = [
   { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
   { name="Athena", email="34168009+BillSchumacher@users.noreply.github.com" },
@@ -18,7 +18,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = ["build", "setuptools", "twine", "wheel", "openai", "loguru", "click",
- "python-dotenv", "scikit-learn", "nltk", "Flask", "flask-cors", "black", "isort", "pytest"]
+ "python-dotenv", "scikit-learn", "nltk", "Flask", "flask-cors", "black", "isort", "pytest",
+ "redis", "sqlalchemy", "psycopg2", "tenacity","tiktoken", "alembic"]
 
 [project.scripts]
 athena = "athena.__main__:main"

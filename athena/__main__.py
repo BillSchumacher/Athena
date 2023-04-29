@@ -18,11 +18,17 @@ from athena.nlu.nltk_intent import NLTKIntentClassification
 )
 def main(log_level):
     setup_logging(log_level)
-    print("Welcome to Athena!")
+    from loguru import logger
+
+    logger.info("Welcome to Athena!")
     username = input("Please enter your name: ")
     intent_pipeline = NLTKIntentClassification()
     intent_pipeline.train(INTENTIONS_TRAIN_DATA)
     entity_pipeline = NLTKEntityExtraction()
+    from athena.db import engine
+    from athena.models import api as models
+
+    models.Base.metadata.create_all(bind=engine)
 
     try:
         while True:
@@ -33,10 +39,10 @@ def main(log_level):
             response = process_input(
                 intent_pipeline, entity_pipeline, user_input, username
             )
-            print(f"{response}")
+            logger.info(f"{response}")
     except KeyboardInterrupt:
         pass
-    print("Athena: Goodbye!")
+    logger.info("Athena: Goodbye!")
 
 
 if __name__ == "__main__":

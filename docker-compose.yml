@@ -1,6 +1,22 @@
 version: "3.9"
 
 services:
+  postgresql:
+    image: "postgres:15.2-alpine"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: athena
+      POSTGRES_PASSWORD: athena
+      POSTGRES_DB: athena
+  redis:
+    image: "redis/redis-stack-server:latest"
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_ARGS: --requirepass athena
   nginx:
     build:
       context: .
@@ -17,3 +33,6 @@ services:
     image: athena-api:latest
     ports:
       - "5000:5000"
+    depends_on:
+      - postgresql
+      - redis

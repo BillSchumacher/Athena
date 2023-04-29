@@ -40,6 +40,11 @@ class InputPipelineExtension:
 )
 def main(log_level) -> None:
     setup_logging(log_level)
+    from athena.db import engine
+    from athena.models import api as models
+
+    models.Base.metadata.create_all(bind=engine)
+
     input_extension = InputPipelineExtension(app)
     app.extensions["input_pipeline"] = input_extension
     app.register_blueprint(chat_api, url_prefix="/api/v1")
