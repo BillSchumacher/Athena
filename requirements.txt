@@ -4,6 +4,7 @@ nltk
 scikit-learn
 Flask
 flask-cors
+flask-restx
 loguru
 click
 gunicorn
