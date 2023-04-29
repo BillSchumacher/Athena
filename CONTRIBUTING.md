@@ -31,3 +31,7 @@ We welcome all contributions to Athena's development! This guide will help you g
 7. **:inbox_tray: Create a pull request**: Submit a pull request to the original Athena repository, providing a clear and concise description of your changes. Be prepared to address any feedback or requested changes from the project maintainers.
 
 Thank you for helping Athena grow and improve! :tada:
+
+### Current Flow
+
+![Flow](https://raw.githubusercontent.com/BillSchumacher/Athena/main/execution_flow.png)
