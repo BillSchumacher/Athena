@@ -1,10 +1,11 @@
 from loguru import logger
 
 from athena.plugins.plugin_base import PluginBase
+from athena.user_manager import UserManager
 
 
 class AuthenticationPlugin(PluginBase):
-    def __init__(self, user_manager):
+    def __init__(self, user_manager: UserManager):
         logger.debug("Initializing authentication plugin...")
         super().__init__(
             "Authentication", "Handles user authentication and registration."
