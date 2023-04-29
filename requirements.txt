@@ -7,6 +7,11 @@ flask-cors
 loguru
 click
 gunicorn
+SQLAlchemy
+redis
+tiktoken
+tenacity
+alembic
 #spacy[transformers]
 #accelerate
 #auto-vicuna
