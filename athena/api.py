@@ -43,6 +43,12 @@ def main(log_level) -> None:
     setup_logging(log_level)
     input_extension = InputExtension(app)
     app.extensions["input"] = input_extension
+
+    from athena.db import engine
+    from athena.models import api as models
+
+    models.Base.metadata.create_all(bind=engine)
+
     app.run(host="0.0.0.0", port=5000)
 
 

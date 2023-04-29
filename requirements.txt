@@ -12,6 +12,7 @@ redis
 tiktoken
 tenacity
 alembic
+psycopg2
 #spacy[transformers]
 #accelerate
 #auto-vicuna

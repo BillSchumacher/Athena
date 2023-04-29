@@ -33,3 +33,6 @@ services:
     image: athena-api:latest
     ports:
       - "5000:5000"
+    depends_on:
+      - postgresql
+      - redis
