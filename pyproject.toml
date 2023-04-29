@@ -19,7 +19,7 @@ classifiers = [
 ]
 dependencies = ["build", "setuptools", "twine", "wheel", "openai", "loguru", "click",
  "python-dotenv", "scikit-learn", "nltk", "Flask", "flask-cors", "black", "isort", "pytest",
- "redis", "sqlalchemy", "psycopg2", "tenacity","tiktoken", "alembic"]
+ "redis", "sqlalchemy", "psycopg2", "tenacity","tiktoken", "alembic", "flask-restx"]
 
 [project.scripts]
 athena = "athena.__main__:main"

@@ -18,7 +18,7 @@ function App() {
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     // Fetch the response from Athena's API
-    const response = await fetch('http://localhost:5000/api/v1/athena', {
+    const response = await fetch('http://localhost:5000/api/v1/chat/athena', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,8 +26,6 @@ function App() {
       body: JSON.stringify({ input: userInput }),
     });
     const data = await response.json();
-
-
     const athenaMessage = { text: data.response, isAthena: true };
     setMessages((prevMessages) => [...prevMessages, athenaMessage]);
     setUserInput('');
@@ -39,13 +37,16 @@ function App() {
   };
   return (
       <div className={`App-chat-container${darkMode ? ' dark' : ''}`}> 
-      <div><DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} /></div>     <Chat
-      userInput={userInput}
-      messages={messages}
-      onUserInput={handleUserInput}
-      onKeyPress={handleKeyPress}
-      darkMode={darkMode}
-    />
+        <div>
+          <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
+        </div>
+        <Chat
+          userInput={userInput}
+          messages={messages}
+          onUserInput={handleUserInput}
+          onKeyPress={handleKeyPress}
+          darkMode={darkMode}
+        />
       </div>
   );
 }

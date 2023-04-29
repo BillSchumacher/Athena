@@ -4,13 +4,14 @@ import click
 from flask import Flask
 from flask_cors import CORS
 
-from athena.api_views.chat import chat_api
+from athena.api_views import blueprint as api
 from athena.loguru_config import setup_logging
 from athena.nlu.intentions_data import INTENTIONS_TRAIN_DATA, INTENTS, SENTENCES
 from athena.nlu.nltk_entities import NLTKEntityExtraction
 from athena.nlu.nltk_intent import NLTKIntentClassification
 
 app = Flask(__name__)
+
 CORS(app)  # , origins=["http://localhost:3000"])
 
 
@@ -47,7 +48,7 @@ def main(log_level) -> None:
 
     input_extension = InputPipelineExtension(app)
     app.extensions["input_pipeline"] = input_extension
-    app.register_blueprint(chat_api, url_prefix="/api/v1")
+    app.register_blueprint(api, url_prefix="/api/v1")
     app.run(host="0.0.0.0", port=5000)
 
 
