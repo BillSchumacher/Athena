@@ -1,6 +1,8 @@
 """Redis memory provider."""
 from __future__ import annotations
+
 import os
+
 import redis
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
