@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import BigInteger, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from athena.db import Base
 
@@ -9,6 +9,7 @@ class Model(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
+    base_url = Column(String, nullable=False)
 
     endpoints = relationship('Endpoint', back_populates='model')
 
@@ -19,6 +20,7 @@ class Endpoint(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
+    path = Column(String, nullable=False)
 
     model_id = Column(Integer, ForeignKey('models.id'))
     model = relationship('Model', back_populates='endpoints')
@@ -47,3 +49,34 @@ class RateLimit(Base):
 
     endpoint_id = Column(Integer, ForeignKey('endpoints.id'))
     endpoint = relationship('Endpoint', back_populates='rate_limits')
+
+
+class Prompt(Base):
+    __tablename__ = 'prompts'
+
+    id = Column(BigInteger, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
+    description = Column(String)
+    prompt = Column(String, nullable=False)
+
+
+class Completion(Base):
+    __tablename__ = 'completions'
+
+    id = Column(BigInteger, primary_key=True)
+    timestamp = Column(BigInteger, nullable=False)
+    completion = Column(String, nullable=False)
+    prompt_id = Column(BigInteger, ForeignKey('prompts.id'))
+    prompt = relationship('Prompt', back_populates='completions')
+    endpoint_id = Column(Integer, ForeignKey('endpoints.id'))
+    endpoint = relationship('Endpoint', back_populates='completions')
+
+
+class Context(Base):
+    __tablename__ = 'contexts'
+
+    id = Column(BigInteger, primary_key=True)
+    role = Column(String, nullable=True)
+    context = Column(String, nullable=False)
+    completion_id = Column(BigInteger, ForeignKey('completions.id'))
+    completion = relationship('Completion', back_populates='contexts')
