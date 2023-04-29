@@ -44,16 +44,19 @@ def openai_completion(
         raise ValueError("OpenAI API key is not available in the environment variable.")
 
     openai.api_key = os.environ["OPENAI_API_KEY"]
-
-    response = openai.Completion.create(
-        engine=model,
-        prompt=prompt,
-        max_tokens=max_tokens,
-        n=n,
-        stop=stop,
-        best_of=best_of,
-        temperature=temperature,
-    )
-    result = response.choices[0].text.strip()
-    logger.debug(f"OpenAI Completion: {result}")
-    return result
+    try:
+        response = completion_with_backoff(
+            engine=model,
+            prompt=prompt,
+            max_tokens=max_tokens,
+            n=n,
+            stop=stop,
+            best_of=best_of,
+            temperature=temperature,
+        )
+        result = response.choices[0].text.strip()
+        logger.debug(f"OpenAI Completion: {result}")
+        return result
+    except Exception as e:
+        logger.exception(f"Error in generating OpenAI Completion: {e}")
+        return "Error"
