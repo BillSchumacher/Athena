@@ -4,6 +4,8 @@ services:
   postgresql:
     image: "postgres:15.2-alpine"
     restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
@@ -19,6 +21,8 @@ services:
   redis:
     image: "redis/redis-stack-server:latest"
     restart: always
+    volumes:
+      - redisdata:/data
     ports:
       - "6379:6379"
     environment:
@@ -46,6 +50,13 @@ services:
         restart: true
       redis:
         condition: service_healthy
+    x-develop:
+      watch:
+        - path: athena-app/package.json
+          action: rebuild
+        - path: athena-app/
+          target: /app
+          action: sync
   api:
     build:
       context: .
@@ -57,11 +68,10 @@ services:
       - "5000:5000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1"]
-      interval: 1m30s
+      interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
-
     depends_on:
       postgresql:
         condition: service_healthy
@@ -75,6 +85,19 @@ services:
       celery_worker:
         condition: service_started
         restart: true
+    env_file:
+      - .env
+    x-develop:
+      watch:
+        - path: requirements.txt
+          action: rebuild
+        - path: athena/
+          target: /app/athena
+          action: sync
+        - path: plugins/
+          target: /app/plugins
+          action: sync
+    entrypoint: ["python", "-m", "athena.api"]
   celery_beat:
     build:
       context: .
@@ -89,6 +112,19 @@ services:
         restart: true
       redis:
         condition: service_healthy
+    env_file:
+      - .env
+    x-develop:
+      watch:
+        - path: requirements.txt
+          action: rebuild
+        - path: athena/
+          target: /app/athena
+          action: sync
+        - path: plugins/
+          target: /app/plugins
+          action: sync
+    entrypoint: ["celery", "-A", "athena", "beat", "--loglevel=info"]
   celery_worker:
     build:
       context: .
@@ -102,4 +138,21 @@ services:
         condition: service_healthy
         restart: true
       redis:
-        condition: service_healthy
+        condition: service_healthy 
+    env_file:
+      - .env
+    x-develop:
+      watch:
+        - path: requirements.txt
+          action: rebuild
+        - path: athena/
+          target: /app/athena
+          action: sync
+        - path: plugins/
+          target: /app/plugins
+          action: sync
+    entrypoint: ["celery", "-A", "athena", "worker", "--loglevel=info"]
+
+volumes:
+  pgdata:
+  redisdata:
