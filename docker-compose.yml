@@ -10,13 +10,26 @@ services:
       POSTGRES_USER: athena
       POSTGRES_PASSWORD: athena
       POSTGRES_DB: athena
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=postgresql://athena:athena@postgresql:5432/athena"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
   redis:
     image: "redis/redis-stack-server:latest"
     restart: always
     ports:
       - "6379:6379"
     environment:
+      REDIS_PASSWORD: athena
       REDIS_ARGS: --requirepass athena
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli -a athena --raw incr ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
   nginx:
     build:
       context: .
@@ -24,6 +37,15 @@ services:
     image: athena-nginx:latest
     ports:
       - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+        restart: true
+      postgresql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
   api:
     build:
       context: .
@@ -33,6 +55,51 @@ services:
     image: athena-api:latest
     ports:
       - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1"]
+      interval: 1m30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
     depends_on:
-      - postgresql
-      - redis
+      postgresql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+        restart: true
+      celery_beat:
+        condition: service_started
+        restart: true
+      celery_worker:
+        condition: service_started
+        restart: true
+  celery_beat:
+    build:
+      context: .
+      target: python-stage
+    environment:
+      - ATHENA_MODE=celery_beat
+      - CELERY_BROKER_URL=redis://:athena@redis:6379/0
+      - DATABASE_URL=postgresql://athena:athena@postgresql:5432/athena
+    depends_on:
+      postgresql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+  celery_worker:
+    build:
+      context: .
+      target: python-stage
+    environment:
+      - ATHENA_MODE=celery
+      - CELERY_BROKER_URL=redis://:athena@redis:6379/0
+      - DATABASE_URL=postgresql://athena:athena@postgresql:5432/athena
+    depends_on:
+      postgresql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
