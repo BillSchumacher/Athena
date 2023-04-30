@@ -2,22 +2,10 @@ version: "3.9"
 
 services:
   nginx:
-    build:
-      context: .
-      target: nginx-stage
     image: billschumacher/athena-nginx:latest
-    ports:
-      - "80:80"
-
   api:
-    build:
-      context: .
-      target: python-stage
     image: billschumacher/athena-api:latest
-    ports:
-      - "5000:5000"
-    env_file:
-      - .env
-    depends_on:
-      - postgresql
-      - redis
+  celery_beat:
+    image: billschumacher/athena-celery-beat:latest
+  celery_worker:
+    image: billschumacher/athena-celery-worker:latest

@@ -44,6 +44,3 @@ RUN pip install gunicorn
 # 4. Copy the API code
 COPY athena /app/athena
 COPY plugins /app/plugins
-
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]

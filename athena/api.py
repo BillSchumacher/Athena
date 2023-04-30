@@ -49,7 +49,10 @@ def main(log_level) -> None:
     input_extension = InputPipelineExtension(app)
     app.extensions["input_pipeline"] = input_extension
     app.register_blueprint(api, url_prefix="/api/v1")
-    app.run(host="0.0.0.0", port=5000)
+    app.run(
+        host="0.0.0.0", port=5000,
+        debug=log_level == "DEBUG"
+    )
 
 
 if __name__ == "__main__":
