@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, Float, ForeignKey, Integer, String
+from sqlalchemy import BigInteger, Column, Float, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from athena.db import Base
@@ -28,6 +28,7 @@ class Endpoint(Base):
 
     costs = relationship("Cost", back_populates="endpoint")
     rate_limits = relationship("RateLimit", back_populates="endpoint")
+    completions = relationship("Completion", back_populates="endpoint")
 
 
 class Cost(Base):
@@ -59,6 +60,7 @@ class Prompt(Base):
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
     prompt = Column(String, nullable=False)
+    completions = relationship("Completion", back_populates="prompt")
 
 
 class Completion(Base):
@@ -71,6 +73,7 @@ class Completion(Base):
     prompt = relationship("Prompt", back_populates="completions")
     endpoint_id = Column(Integer, ForeignKey("endpoints.id"))
     endpoint = relationship("Endpoint", back_populates="completions")
+    contexts = relationship("Context", back_populates="completions")
 
 
 class Context(Base):
@@ -80,4 +83,14 @@ class Context(Base):
     role = Column(String, nullable=True)
     context = Column(String, nullable=False)
     completion_id = Column(BigInteger, ForeignKey("completions.id"))
-    completion = relationship("Completion", back_populates="contexts")
+    completions = relationship("Completion", back_populates="contexts")
+
+
+class Response(Base):
+    __tablename__ = 'responses'
+    id = Column(Integer, primary_key=True)
+    created = Column(DateTime, nullable=False)
+    model = Column(String)
+    object_type = Column(String)
+    usage_prompt_tokens = Column(Integer, default=0)
+    usage_completion_tokens = Column(Integer, default=0)

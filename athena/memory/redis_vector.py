@@ -1,9 +1,9 @@
 from __future__ import annotations
-
+import time
 from typing import Optional
 
 from loguru import logger
-from redis.commands.search.field import TextField, VectorField
+from redis.commands.search.field import TextField, VectorField, NumericField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 from redis.commands.search.result import Result
@@ -12,6 +12,8 @@ from athena.memory.redis import redis_client
 
 SCHEMA = [
     TextField("data"),
+    NumericField("timestamp"),
+    NumericField("response_id"),
     VectorField(
         "embedding",
         "HNSW",
@@ -42,7 +44,7 @@ def create_index(index_name: str) -> bool:
         return False
 
 
-def add_text_embedding(index_name: str, key: str, text: str, embedding: bytes) -> None:
+def add_text_embedding(index_name: str, key: int, text: str, embedding: bytes) -> None:
     """
     Adds a text and its embedding to the Redis search index.
 
@@ -51,7 +53,7 @@ def add_text_embedding(index_name: str, key: str, text: str, embedding: bytes) -
         text: The text to add.
         embedding: The embedding to add.
     """
-    data_dict = {b"data": text, "embedding": embedding}
+    data_dict = {b"data": text, "timestamp": time.time(), "response_id": key, "embedding": embedding}
     redis_client.hset(f"{index_name}:{key}", mapping=data_dict)
 
 

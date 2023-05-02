@@ -20,7 +20,7 @@ classifiers = [
 dependencies = ["build", "setuptools", "twine", "wheel", "openai", "loguru", "click",
  "python-dotenv", "scikit-learn", "nltk", "Flask", "flask-cors", "black", "isort", "pytest",
  "redis", "sqlalchemy", "psycopg2", "tenacity","tiktoken", "alembic", "flask-restx",
- "celery[redis]"]
+ "celery[redis]", "cityhash"]
 
 [project.scripts]
 athena = "athena.__main__:main"

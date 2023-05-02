@@ -26,7 +26,7 @@ function App() {
       body: JSON.stringify({ input: userInput }),
     });
     const data = await response.json();
-    const athenaMessage = { text: data.response, isAthena: true };
+    const athenaMessage = { text: JSON.parse(data.response).choices[0].text, isAthena: true };
     setMessages((prevMessages) => [...prevMessages, athenaMessage]);
     setUserInput('');
   };

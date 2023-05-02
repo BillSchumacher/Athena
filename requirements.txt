@@ -15,6 +15,7 @@ tenacity
 alembic
 psycopg2
 celery[redis]
+cityhash
 #spacy[transformers]
 #accelerate
 #auto-vicuna
