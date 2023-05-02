@@ -100,18 +100,17 @@ def process_input(
                     ]
                 }
             )
+        elif completion_callback == fastchat_chat_completion:
+            logger.debug(
+                "No intent was detected. Using fast-chat to generate a response."
+            )
+            response = completion_callback(
+                "fastchat-t5-3b-v1.0", prompt, temperature=0.8, max_tokens=512
+            )
         else:
-            if completion_callback == fastchat_chat_completion:
-                logger.debug(
-                    "No intent was detected. Using fast-chat to generate a response."
-                )
-                response = completion_callback(
-                    "fastchat-t5-3b-v1.0", prompt, temperature=0.8, max_tokens=512
-                )
-            else:
-                logger.debug(
-                    "No intent was detected. Using GPT-3 to generate a response."
-                )
-                response = completion_callback(prompt)
+            logger.debug(
+                "No intent was detected. Using GPT-3 to generate a response."
+            )
+            response = completion_callback(prompt)
     logger.info(f"Response generated: {response}")
     return response
