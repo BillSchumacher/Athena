@@ -1,24 +1,24 @@
+from datetime import datetime
 from itertools import islice
 from typing import Any
-from datetime import datetime
-from cityhash import CityHash64
-from athena.crud.response import create_response
-from athena.db import get_db, session_scope
-from athena.memory.redis import redis_client
-from athena.memory.redis_vector import add_text_embedding, create_index, search_similar
+
 import numpy as np
 import openai
 import tiktoken
+from cityhash import CityHash64
+from loguru import logger
 from tenacity import (
     retry,
     retry_if_not_exception_type,
     stop_after_attempt,
     wait_random_exponential,
 )
-from loguru import logger
 
+from athena.crud.response import create_response
+from athena.db import get_db, session_scope
+from athena.memory.redis import redis_client
+from athena.memory.redis_vector import add_text_embedding, create_index, search_similar
 from athena.models.api import Response
-
 
 EMBEDDING_MODEL = "text-embedding-ada-002"
 EMBEDDING_CTX_LENGTH = 8191
@@ -54,7 +54,9 @@ def len_safe_get_embedding(
     for chunk in chunked_tokens(
         text, encoding_name=encoding_name, chunk_length=max_tokens
     ):
-        chunk_embeddings.append(get_embedding(chunk, model=model, hashed_key=hashed_key))
+        chunk_embeddings.append(
+            get_embedding(chunk, model=model, hashed_key=hashed_key)
+        )
         chunk_lens.append(len(chunk))
     averaged_embeddings = []
     if average:
@@ -73,7 +75,7 @@ def len_safe_get_embedding(
                     index_name=f"{model}:average",
                     key=hashed_key,
                     text=text,
-                    embedding=convert_embeddings_to_np(averaged_embeddings).tobytes()
+                    embedding=convert_embeddings_to_np(averaged_embeddings).tobytes(),
                 )
                 redis_client.sadd(hashed_key, f"{model}:average:{hashed_key}")
             except Exception as e:
@@ -94,23 +96,23 @@ def get_embedding(text_or_tokens, model=EMBEDDING_MODEL, hashed_key=None):
     with session_scope() as session:
         response_obj = Response(
             created=datetime.now(),
-            model=result['model'],
-            object_type=result['object'],
-            usage_prompt_tokens=result['usage']['prompt_tokens']
+            model=result["model"],
+            object_type=result["object"],
+            usage_prompt_tokens=result["usage"]["prompt_tokens"],
         )
         response = create_response(session, response_obj)
         response_id = response.id
     embedding = result["data"][0]["embedding"]
     try:
-        create_index(result['model'])
+        create_index(result["model"])
     except Exception as e:
         logger.debug(e)
     try:
         add_text_embedding(
-            index_name=result['model'],
+            index_name=result["model"],
             key=response_id,
             text=text_or_tokens,
-            embedding=convert_embeddings_to_np(embedding).tobytes()
+            embedding=convert_embeddings_to_np(embedding).tobytes(),
         )
         if hashed_key:
             redis_client.sadd(hashed_key, f"{result['model']}:{response_id}")
@@ -147,8 +149,11 @@ def get_openai_embedding(
         logger.debug(f"Token length > max tokens: {token_length} > {max_tokens}")
         logger.debug("Splitting text into chunks")
         return len_safe_get_embedding(
-            text, model=model, max_tokens=max_tokens, encoding_name=embedding_encoding,
-            hashed_key=text_hash
+            text,
+            model=model,
+            max_tokens=max_tokens,
+            encoding_name=embedding_encoding,
+            hashed_key=text_hash,
         )
     logger.debug("Getting embedding from OpenAI")
     return [get_embedding(text, model, hashed_key=text_hash)], []

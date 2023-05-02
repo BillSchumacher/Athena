@@ -53,7 +53,7 @@ def openai_completion(
     split_prompt = prompt.split("Human:")
     embeddings = get_openai_embedding(split_prompt[-1])
     logger.debug(embeddings)
-    
+
     try:
         response = completion_with_backoff(
             engine=model,

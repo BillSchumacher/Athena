@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, Float, ForeignKey, Integer, String, DateTime
+from sqlalchemy import BigInteger, Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from athena.db import Base
@@ -87,7 +87,7 @@ class Context(Base):
 
 
 class Response(Base):
-    __tablename__ = 'responses'
+    __tablename__ = "responses"
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, nullable=False)
     model = Column(String)
