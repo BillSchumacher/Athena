@@ -1,11 +1,14 @@
+import json
+
 from loguru import logger
 
 import plugins
+from athena.llm.fast_chat.chat_completion import fastchat_chat_completion
 from athena.llm.openai.completion import openai_completion
 from athena.plugins.authentication_plugin import AuthenticationPlugin
 from athena.plugins.plugin_base import PluginBase
 from athena.plugins.plugin_manager import PluginManager
-from athena.prompt import SYSTEM_PROMPT
+from athena.prompt import ROLE_ASSISTANT_PROMPT, ROLE_SYSTEM_PROMPT, SYSTEM_PROMPT
 from athena.user_manager import UserManager
 
 user_manager = UserManager()
@@ -20,7 +23,7 @@ def process_input(
     completion_callback=None,
 ):
     if not completion_callback:
-        completion_callback = openai_completion
+        completion_callback = fastchat_chat_completion
     logger.info(f"User input received: {user_input}")
     if user_input == "":
         return "I'm sorry, I didn't receive any input. Can you please try again?"
@@ -51,33 +54,64 @@ def process_input(
             logger.debug("No personalization data found.")
 
     response = plugin_manager.process_input(user_input)
-    prompt = f"{SYSTEM_PROMPT}{user_input}"
+    if completion_callback == openai_completion:
+        prompt = f"{SYSTEM_PROMPT}{user_input}"
+    else:
+        prompt = [
+            {"role": "system", "content": ROLE_SYSTEM_PROMPT},
+            {"role": "assistant", "content": ROLE_ASSISTANT_PROMPT},
+            {"role": "user", "content": user_input},
+        ]
     if response is None and intent_confidence < 0.65:
         logger.debug(
             "No plugin was able to process the input and the intent confidence is low. Using GPT-3 to generate a response."
         )
-        response = completion_callback(prompt)
+        if completion_callback == fastchat_chat_completion:
+            response = completion_callback(
+                "fastchat-t5-3b-v1.0", prompt, temperature=0.8, max_tokens=512
+            )
+        else:
+            response = completion_callback(prompt)
 
     if response is None:
         logger.debug("No plugin was able to process the input. Using default logic.")
         if intent == "greeting":
-            response = "Hello! How can I help you today?"
+            response = json.dumps(
+                {"choices": [{"text": "Hello! How can I help you today?"}]}
+            )
         elif intent == "goodbye":
-            response = "Goodbye! Have a great day!"
+            response = json.dumps({"choices": [{"text": "Goodbye! Have a great day!"}]})
         elif intent == "current_state":
-            response = "I've been busy!"
+            response = json.dumps({"choices": [{"text": "I've been busy!"}]})
         elif intent == "name":
-            response = "My name is Athena!"
+            response = json.dumps({"choices": [{"text": "My name is Athena!"}]})
         elif intent == "weather":
             location = "unknown"
             if entities:
                 for entity in entities:
                     if entity[0] == "GPE":
                         location = entities[0][-1]
-            response = f"I'm not currently able to check the weather, but you asked about {location}."
+            response = json.dumps(
+                {
+                    "choices": [
+                        {
+                            "text": f"I'm not currently able to check the weather, but you asked about {location}."
+                        }
+                    ]
+                }
+            )
         else:
-            logger.debug("No intent was detected. Using GPT-3 to generate a response.")
-
-            response = completion_callback(prompt)
+            if completion_callback == fastchat_chat_completion:
+                logger.debug(
+                    "No intent was detected. Using fast-chat to generate a response."
+                )
+                response = completion_callback(
+                    "fastchat-t5-3b-v1.0", prompt, temperature=0.8, max_tokens=512
+                )
+            else:
+                logger.debug(
+                    "No intent was detected. Using GPT-3 to generate a response."
+                )
+                response = completion_callback(prompt)
     logger.info(f"Response generated: {response}")
     return response

@@ -1,4 +1,5 @@
 import os
+from contextlib import contextmanager
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -28,3 +29,17 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = SessionLocal()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
